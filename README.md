@@ -1,10 +1,12 @@
-# Compilador Cheese++
+# Interpretador Cheese++ - Trabalho final de Compiladores em 2025.1
 
-Um compilador completo para a linguagem de programação Cheese++, implementado em Python usando Lark para análise sintática.
+Este trabalho teve como objetivo a implementação de um interpretador completo para a linguagem de programação Cheese++, utilizando Python e Lark para análise sintática.
 
 ## Sobre o Cheese++
 
 Cheese++ é uma linguagem de programação baseada quase inteiramente nos princípios operacionais do queijo. A linguagem é case-sensitive e possui uma sintaxe única inspirada em nomes de queijos.
+
+A referência utilizada para entendimento e estudo da linguagem foi [Cheese++ - Esolang](https://esolangs.org/wiki/Cheese%2B%2B).
 
 ## Sintaxe Básica
 
@@ -172,7 +174,7 @@ rt.run(parse(code), code)
 
 ## Resultados dos Testes
 
-Todos os 6 testes estão passando (100% de sucesso):
+6 testes foram implementados, e possuem 100% de aproveitamento. São eles:
 
 - **test_exemplo_01**: Assignments e expressões aritméticas
 - **test_exemplo_02**: Múltiplas funcionalidades integradas
@@ -219,6 +221,4 @@ Todos os 6 testes estão passando (100% de sucesso):
 |:----:|----|---------|-----|
 |`1.0`|14/07/2025|Criação do README com o comando dos testes|[Ana Julia](https://github.com/ailujana)|
 |`1.1`|15/07/2025|Criação do README completo|[Maria Clara](https://github.com/Oleari19)|
-
-
-*Este é um projeto acadêmico desenvolvido para a disciplina de Compiladores, implementando um compilador completo para a linguagem Cheese++.*
+|`1.1`|15/07/2025|Adequação e correção do README|[Júlia Fortunato](https://github.com/julia-fortunato)|

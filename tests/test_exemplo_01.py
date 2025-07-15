@@ -1,6 +1,8 @@
+import pytest
 from cheesepp.parser import parse
 from cheesepp.runtime import Runtime
 
+@pytest.mark.all
 def test_exemplo_01():
     code = """Cheese
 Glyn(a) = 2 + 3;
