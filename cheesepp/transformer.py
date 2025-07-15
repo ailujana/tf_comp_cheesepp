@@ -2,7 +2,29 @@ from lark import Transformer
 from cheesepp.ast import *
 
 class CheeseTransformer(Transformer):
+    def start(self, items):
+        return items[0]  
+    
+    def program(self, items):
+        return items  
+    
+    def stmt(self, items):
+        if items:
+            return items[0]  
+        else:
+            return None  
+        
     def assignment(self, items):
+        name = str(items[0])
+        expr = items[1]
+        return CheeseAssign(name, expr)
+    
+    def assignment2(self, items):
+        name = str(items[0])
+        expr = items[1]
+        return CheeseAssign(name, expr)
+    
+    def assignment3(self, items):
         name = str(items[0])
         expr = items[1]
         return CheeseAssign(name, expr)
@@ -15,31 +37,39 @@ class CheeseTransformer(Transformer):
 
     def if_stmt(self, items):
         condition = items[0]
-        split = items[1:]
-        white_index = next(i for i, stmt in enumerate(split) if isinstance(stmt, CheesePrint) and stmt.expr == "WHITE_MARKER")
-        then_branch = split[:white_index]
-        else_branch = split[white_index+1:]
+        statements = items[1:]
+        
+        mid = len(statements) // 2
+        then_branch = statements[:mid]
+        else_branch = statements[mid:]
+        
         return CheeseIf(condition, then_branch, else_branch)
 
     def loop_stmt(self, items):
         *body, condition = items
         return CheeseLoop(body, condition)
 
-    def belgian_stmt(self, _):
+    def belgian_stmt(self, items):
         return Belgian()
 
     def number(self, items):
         return Number(float(items[0]))
 
-    def var(self, items):
+    def var_access(self, items):
         return Var(str(items[0]))
 
-    def glyn_var(self, items):
+    def var_access_simple(self, items):
         return Var(str(items[0]))
 
     def string(self, items):
-        value = str(items[0])[5:-5]
-        return String(value)
+        return items[0]  
+    
+    def swiss_string(self, items):
+        if len(items) > 0:
+            content = str(items[0])
+        else:
+            content = ""
+        return String(content)
 
     def add(self, items): return BinOp(items[0], '+', items[1])
     def sub(self, items): return BinOp(items[0], '-', items[1])

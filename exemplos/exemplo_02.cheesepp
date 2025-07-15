@@ -1,6 +1,11 @@
 Cheese
-Glyn(x, 3) Brie
-Glyn(y, 4) Brie
-Wensleydale(x) Brie
-Wensleydale(y) Brie
+Glyn(greeting) Cheddar SwissHello, WorldSwiss Coleraine
+Glyn(number) Cheddar 42 Coleraine
+Glyn(result) Cheddar Glyn(number) times 2 Coleraine
+Wensleydale(Glyn(greeting)) Brie
+Wensleydale(Glyn(result)) Brie
+Stilton Glyn(number) greater 40 Blue
+    Wensleydale(SwissNumber is bigSwiss) Brie
+White
+    Wensleydale(SwissNumber is smallSwiss) Brie
 NoCheese

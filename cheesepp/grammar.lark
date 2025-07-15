@@ -1,34 +1,79 @@
-start: "Cheese" stmt+ "NoCheese"
+start: "Cheese" program "NoCheese"
 
-?stmt: assignment
-     | print_stmt
-     | if_stmt
-     | loop_stmt
-     | belgian_stmt
-     | expr_stmt
+program: stmt*
 
-assignment: "Glyn" "(" NAME "," expr ")"      -> assignment
-print_stmt: "Wensleydale" "(" expr ")"        -> print_stmt
-loop_stmt: "Cheddar" expr "..." stmt+ "Coleraine"   -> loop_stmt
-if_stmt: "Stilton" expr "..." stmt+ "..." stmt+ "..."   -> if_stmt
-belgian_stmt: "Belgian"                        -> belgian_stmt
-expr_stmt: expr
+stmt: assignment ";"
+    | assignment "Brie"
+    | assignment2
+    | print_stmt ";"
+    | print_stmt "Brie"
+    | if_stmt 
+    | loop_stmt
+    | belgian_stmt ";"
+    | belgian_stmt "Brie"
+    | expr_stmt ";"
+    | expr_stmt "Brie"
+    | ";"
+    | "Brie"
 
-?expr: expr "+" term     -> add
-     | expr "-" term     -> sub
-     | term
+assignment: "Glyn" "(" NAME "," expr ")" -> assignment
+          | "Glyn" "(" NAME ")" "=" expr -> assignment3
 
-?term: term "*" factor   -> mul
-     | term "/" factor   -> div
+assignment2: "Glyn" "(" NAME ")" "Cheddar" expr "Coleraine" -> assignment2
+
+print_stmt: "Wensleydale" "(" expr ")" -> print_stmt
+
+if_stmt: "Stilton" expr "Blue" stmt* "White" stmt* -> if_stmt
+
+loop_stmt: "Cheddar" stmt* "Coleraine" expr -> loop_stmt
+
+belgian_stmt: "Belgian" -> belgian_stmt
+
+expr_stmt: expr -> expr_stmt
+
+?expr: comparison
+
+?comparison: comparison "==" arith -> eq
+           | comparison "!=" arith -> ne
+           | comparison "<" arith -> lt
+           | comparison "<=" arith -> le
+           | comparison ">" arith -> gt
+           | comparison ">=" arith -> ge
+           | comparison "equals" arith -> eq
+           | comparison "not_equals" arith -> ne
+           | comparison "less" arith -> lt
+           | comparison "less_equals" arith -> le
+           | comparison "greater" arith -> gt
+           | comparison "greater_equals" arith -> ge
+           | comparison "minor" arith -> lt
+           | comparison "great" arith -> gt
+           | arith
+
+?arith: arith "+" term -> add
+      | arith "-" term -> sub
+      | arith "plus" term -> add
+      | arith "minus" term -> sub
+      | term
+
+?term: term "*" factor -> mul
+     | term "/" factor -> div
+     | term "times" factor -> mul
+     | term "divided" factor -> div
      | factor
 
-?factor: NUMBER          -> number
-       | STRING          -> string
-       | "Glyn" "(" NAME ")"   -> var_access
+?factor: NUMBER -> number
+       | swiss_string -> string
+       | "Glyn" "(" NAME ")" -> var_access
+       | NAME -> var_access_simple
        | "(" expr ")"
 
-%import common.CNAME -> NAME
+swiss_string: "Swiss" SWISS_CONTENT "Swiss"
+
+// Definindo tokens com prioridade (mais específicos primeiro)
 %import common.NUMBER
-%import common.ESCAPED_STRING -> STRING
 %import common.WS
 %ignore WS
+
+// Tokens definidos com prioridade
+SWISS_CONTENT: /([^S]|S(?!wiss))+/
+NAME: /(?!Swiss)[a-zA-Z_][a-zA-Z0-9_]*/

@@ -73,10 +73,12 @@ class Runtime:
         else:
             return node
 
-    def run(self, tree, source_code=None):
+    def run(self, program, source_code=None):
         self.last_source = source_code
         results = []
-        for stmt in tree.children:
-            result = self.eval(stmt)
-            results.append(result)
+        # program is now a list of statements
+        for stmt in program:
+            if stmt is not None:  # Skip None statements
+                result = self.eval(stmt)
+                results.append(result)
         return results[-1] if results else None
