@@ -1,0 +1,7 @@
+Cheese
+Glyn(x) Cheddar 10 Coleraine
+Glyn(y) Cheddar 20 Coleraine
+Glyn(z) Cheddar Glyn(x) plus Glyn(y) Coleraine
+Wensleydale(Glyn(z))
+Brie
+NoCheese
