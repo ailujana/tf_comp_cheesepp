@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "cheesepp"
 version = "0.1.0"
 description = "Interpretador para a linguagem Cheese++"
+requires-python = ">=3.8"
 dependencies = [
     "lark",
     "pytest",
@@ -15,6 +16,11 @@ dependencies = [
 dev = [
     "pytest",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cheesepp*"]
+exclude = ["exemplos*", "tests*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

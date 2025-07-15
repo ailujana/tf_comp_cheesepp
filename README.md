@@ -143,22 +143,42 @@ tf_comp_cheesepp/
 ## Como Executar
 
 ### Pré-requisitos
-- Python 3.8+
-- Lark parser: `pip install lark`
+- Python 3.13+
+- uv (gerenciador de pacotes moderno): [Instalar uv](https://docs.astral.sh/uv/getting-started/installation/)
+
+### Configuração do Ambiente
+```bash
+# 1. Instalar dependências
+uv sync
+
+# 2. Ou executar diretamente com uv run
+uv run pytest
+```
 
 ### Executar Testes
 ```bash
 # Todos os testes
-PYTHONPATH=. python3 -m pytest tests/ -v
+uv run pytest
 
-# Teste específico
-PYTHONPATH=. pytest tests/test_exemplo_X.py -v
+# Teste específico por número
+uv run pytest -k "01"
 
-# Teste simples
-PYTHONPATH=. pytest -v
+# Teste específico por arquivo
+uv run pytest tests/test_exemplo_01.py
+
+# Modo detalhado (mostra cada teste individual)
+uv run pytest -v
+
 ```
 
 ### Executar Código Cheese++
+
+Copie o código para um arquivo python chamado testCheese.py e no terminal rode o comando e ele irá printar o número 42.0
+
+```python
+python3 testCheese.py
+```
+
 ```python
 from cheesepp.parser import parse
 from cheesepp.runtime import Runtime
@@ -172,7 +192,11 @@ rt = Runtime()
 rt.run(parse(code), code)
 ```
 
+---
+ 
 ## Resultados dos Testes
+
+Mais de 30 testes foram implementados, cobrindo todas as funcionalidades da linguagem com 100% de aproveitamento.
 
 6 testes foram implementados, e possuem 100% de aproveitamento. São eles:
 
@@ -183,6 +207,46 @@ rt.run(parse(code), code)
 - **test_exemplo_05**: Loops e operadores em palavras
 - **test_exemplo_06**: Strings Swiss e comando Belgian
 
+---
+
+### Testes de Operações Matemáticas (test_exemplo_08)
+
+- **test_operacoes_matematicas**: Testa todas as operações aritméticas básicas (+, -, *, /)
+- **test_operacoes_em_portugues**: Verifica operações matemáticas em português (plus, minus, times, divided)
+- **test_comparacoes_logicas**: Testa operadores de comparação com símbolos (==, !=, >, <, >=, <=)
+- **test_comparacoes_em_portugues**: Verifica comparações em português (equals, not_equals, greater, less, etc.)
+
+### Testes de Debug e Print (test_exemplo_09)
+
+- **test_belgian_com_codigo_fonte**: Comando Belgian para debug com código fonte
+- **test_belgian_sem_codigo_fonte**: Belgian quando não há código fonte disponível
+- **test_prints_multiplos**: Múltiplos comandos Wensleydale sequenciais
+- **test_print_calculos**: Print de cálculos diretos e expressões
+
+### Testes de Estruturas Condicionais (test_exemplo_10)
+
+- **test_if_simples**: Estruturas condicionais básicas (then branch)
+- **test_if_else_falso**: Testa o else branch quando a condição é falsa
+- **test_if_aninhado**: Estruturas condicionais aninhadas (if dentro de else)
+- **test_if_multiplas_operacoes**: Múltiplas operações dentro dos branches then/else
+
+### Testes de Strings (test_exemplo_11)
+
+- **test_strings_simples**: Manipulação básica de strings Swiss com diferentes tipos de conteúdo
+- **test_strings_vazias_e_espacos**: Strings com espaços, caracteres especiais e acentos
+- **test_strings_com_numeros**: Strings contendo números e teste de impressão de strings
+
+### Testes de Variáveis (test_exemplo_12)
+
+- **test_sintaxes_atribuicao**: Testa todas as três sintaxes de atribuição disponíveis:
+  - `Glyn(var) = expr` (estilo assignment)
+  - `Glyn(var, expr)` (estilo função)  
+  - `Glyn(var) Cheddar expr Coleraine` (estilo Cheese++)
+- **test_acesso_variaveis**: Diferentes formas de acessar e referenciar variáveis
+- **test_expressoes_complexas**: Expressões matemáticas complexas com precedência de operadores
+- **test_variaveis_nao_definidas**: Comportamento com variáveis não definidas (retornam 0)
+
+---
 
 ## Trabalho Desenvolvido Por
 
@@ -221,4 +285,4 @@ rt.run(parse(code), code)
 |:----:|----|---------|-----|
 |`1.0`|14/07/2025|Criação do README com o comando dos testes|[Ana Julia](https://github.com/ailujana)|
 |`1.1`|15/07/2025|Criação do README completo|[Maria Clara](https://github.com/Oleari19)|
-|`1.1`|15/07/2025|Adequação e correção do README|[Júlia Fortunato](https://github.com/julia-fortunato)|
+|`1.2`|15/07/2025|Adequação e correção do README|[Júlia Fortunato](https://github.com/julia-fortunato)|
