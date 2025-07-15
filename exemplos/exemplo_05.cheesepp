@@ -1,9 +1,8 @@
 Cheese
-Glyn(x) Cheddar 10 Coleraine
-Glyn(y) Cheddar 20 Coleraine
-Stilton Glyn(x) great Glyn(y) Blue
-    Wensleydale(Glyn(x))
+Glyn(x) Cheddar 20 Coleraine
+Glyn(y) Cheddar 10 Coleraine
+Stilton Glyn(x) greater Glyn(y) Blue
+    Wensleydale(Glyn(x)) Brie
 White
-    Wensleydale(Glyn(y))
-Brie
+    Wensleydale(Glyn(y)) Brie
 NoCheese

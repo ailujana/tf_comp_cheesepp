@@ -1,7 +1,7 @@
 Cheese
 Glyn(i) Cheddar 0 Coleraine
-Cheddar Glyn(i) minor 3 Coleraine
-    Wensleydale(Glyn(i))
+Cheddar 
+    Wensleydale(Glyn(i)) Brie
     Glyn(i) Cheddar Glyn(i) plus 1 Coleraine
-Brie
+Coleraine Glyn(i) equals 3
 NoCheese

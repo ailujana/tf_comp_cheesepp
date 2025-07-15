@@ -171,25 +171,19 @@ uv run pytest -v
 
 ```
 
-### Executar Código Cheese++
+### Executar Exemplos Cheese++
 
-Copie o código para um arquivo python chamado testCheese.py e no terminal rode o comando e ele irá printar o número 42.0
+Para executar os exemplos:
 
-```python
-python3 testCheese.py
-```
+```bash
+# Para rodar todos os exemplos
+uv run python exemplo.py all 
 
-```python
-from cheesepp.parser import parse
-from cheesepp.runtime import Runtime
+# ou
+uv run python exemplo.py a
 
-code = """Cheese
-Glyn(x) Cheddar 42 Coleraine
-Wensleydale(Glyn(x)) Brie
-NoCheese"""
-
-rt = Runtime()
-rt.run(parse(code), code)
+# Rodar exemplo específico 
+uv run python exemplo.py exemplos/exemplo_01.cheesepp
 ```
 
 ---
