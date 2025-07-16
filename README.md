@@ -92,12 +92,18 @@ NoCheese
 ```
 tf_comp_cheesepp/
 ├── cheesepp/
-│   ├── __init__.py
-│   ├── ast.py          # Árvore Sintática Abstrata
-│   ├── grammar.lark    # Gramática da linguagem
-│   ├── parser.py       # Analisador sintático
-│   ├── runtime.py      # Runtime/Interpretador
-│   └── transformer.py  # Transformador AST
+│   ├── __init__.py      # Módulo principal
+│   ├── __main__.py      # Execução como módulo Python
+│   ├── ast.py           # Árvore Sintática Abstrata
+│   ├── cli.py           # Interface de linha de comando
+│   ├── ctx.py           # Gerenciamento de contexto e símbolos
+│   ├── errors.py        # Definições de erros customizados
+│   ├── grammar.lark     # Gramática formal da linguagem
+│   ├── node.py          # Nós da AST e estruturas de dados
+│   ├── parser.py        # Analisador sintático
+│   ├── runtime.py       # Runtime/Interpretador
+│   ├── testing.py       # Sistema de testes integrado
+│   └── transformer.py   # Transformador AST
 ├── exemplos/
 │   ├── exemplo_01.cheesepp
 │   ├── exemplo_02.cheesepp
@@ -112,6 +118,7 @@ tf_comp_cheesepp/
 │   ├── test_exemplo_04.py
 │   ├── test_exemplo_05.py
 │   └── test_exemplo_06.py
+├── exemplo.py           # Script para executar exemplos
 └── README.md
 ```
 
@@ -124,7 +131,12 @@ tf_comp_cheesepp/
 3. **Transformer (transformer.py)**: Converte a árvore Lark em AST customizada
 4. **Runtime (runtime.py)**: Interpretador que executa o código Cheese++
 5. **Grammar (grammar.lark)**: Gramática formal da linguagem
-
+6. **Context (ctx.py)**: Gerenciamento de contexto e tabela de símbolos
+7. **Errors (errors.py)**: Sistema de tratamento de erros customizado
+8. **Node (node.py)**: Definições de nós da AST e estruturas auxiliares
+9. **CLI (cli.py)**: Interface de linha de comando
+10. **Testing (testing.py)**: Sistema integrado de testes
+    
 ### Funcionalidades Implementadas
 
 - Análise léxica e sintática completa
@@ -139,6 +151,8 @@ tf_comp_cheesepp/
 - Comando Belgian para debug
 - Sistema de variáveis com ambiente de execução
 - Tratamento de erros de sintaxe
+- Tabela de símbolos e gerenciamento de contexto
+- Sistema de testes integrado
 
 ## Como Executar
 
@@ -146,6 +160,10 @@ tf_comp_cheesepp/
 - Python 3.13+
 - uv (gerenciador de pacotes moderno): [Instalar uv](https://docs.astral.sh/uv/getting-started/installation/)
 
+### Dependências
+- **lark**: Parser generator para análise sintática
+- **pytest**: Framework de testes
+- 
 ### Configuração do Ambiente
 ```bash
 # 1. Instalar dependências
@@ -185,8 +203,6 @@ uv run python exemplo.py a
 # Rodar exemplo específico 
 uv run python exemplo.py exemplos/exemplo_01.cheesepp
 ```
-
----
  
 ## Resultados dos Testes
 
@@ -200,8 +216,6 @@ Mais de 30 testes foram implementados, cobrindo todas as funcionalidades da ling
 - **test_exemplo_04**: Estruturas condicionais
 - **test_exemplo_05**: Loops e operadores em palavras
 - **test_exemplo_06**: Strings Swiss e comando Belgian
-
----
 
 ### Testes de Operações Matemáticas (test_exemplo_08)
 
@@ -240,7 +254,7 @@ Mais de 30 testes foram implementados, cobrindo todas as funcionalidades da ling
 - **test_expressoes_complexas**: Expressões matemáticas complexas com precedência de operadores
 - **test_variaveis_nao_definidas**: Comportamento com variáveis não definidas (retornam 0)
 
----
+**Total: 100% dos testes passando** 
 
 ## Trabalho Desenvolvido Por
 
@@ -280,3 +294,4 @@ Mais de 30 testes foram implementados, cobrindo todas as funcionalidades da ling
 |`1.0`|14/07/2025|Criação do README com o comando dos testes|[Ana Julia](https://github.com/ailujana)|
 |`1.1`|15/07/2025|Criação do README completo|[Maria Clara](https://github.com/Oleari19)|
 |`1.2`|15/07/2025|Adequação e correção do README|[Júlia Fortunato](https://github.com/julia-fortunato)|
+|`1.3`|16/07/2025|Estruturação final|[Maria Clara](https://github.com/Oleari19)|
