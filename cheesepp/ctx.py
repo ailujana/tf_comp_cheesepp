@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class SymbolType(Enum):
-    """Enumeration for symbol types in Cheese++"""
+    """Enumeração de tipos em Cheese++"""
     VARIABLE = "variable"
     FUNCTION = "function"
     CONSTANT = "constant"
@@ -12,7 +12,7 @@ class SymbolType(Enum):
 
 @dataclass
 class Symbol:
-    """Represents a symbol in the symbol table"""
+    """Representa um símbolo na tabela de símbolos"""
     name: str
     type: SymbolType
     value: Any
@@ -20,30 +20,30 @@ class Symbol:
     line_number: Optional[int] = None
     
     def __repr__(self):
-        return f"Symbol({self.name}, {self.type.value}, {self.value}, scope={self.scope_level})"
+        return f"Simbolo({self.name}, {self.type.value}, {self.value}, scope={self.scope_level})"
 
 
 class SymbolTable:
     """
-    Symbol table implementation for the Cheese++ compiler.
-    Manages variable declarations, lookups, and scope management.
+    Implementação de tabela de símbolos para o interpretador Cheese++.
+    Gerencia declarações de variáveis, pesquisas e gerenciamento de escopo.
     """
     
     def __init__(self):
         self.symbols: Dict[str, Symbol] = {}
-        self.scope_stack: List[int] = [0]  # Global scope starts at 0
+        self.scope_stack: List[int] = [0]  
         self.current_scope: int = 0
         
     def enter_scope(self) -> None:
-        """Enter a new scope level"""
+        """Entra em um novo escopo"""
         self.current_scope += 1
         self.scope_stack.append(self.current_scope)
         
     def exit_scope(self) -> None:
-        """Exit current scope and remove symbols from that scope"""
+        """Sair do escopo atual e remover símbolos desse escopo"""
         if len(self.scope_stack) > 1:
             exiting_scope = self.scope_stack.pop()
-            # Remove symbols from exiting scope
+            
             to_remove = [name for name, symbol in self.symbols.items() 
                         if symbol.scope_level == exiting_scope]
             for name in to_remove:
@@ -53,10 +53,10 @@ class SymbolTable:
     def define(self, name: str, symbol_type: SymbolType, value: Any, 
                line_number: Optional[int] = None) -> bool:
         """
-        Define a new symbol in the current scope.
-        Returns True if successful, False if symbol already exists in current scope.
+        Define um novo símbolo no escopo atual.
+        Retorna True se for bem sucedido, False se o símbolo já existir no escopo atual.
         """
-        # Check if symbol already exists in current scope
+        # Checka se um simbolo existe no escopo atual
         if name in self.symbols and self.symbols[name].scope_level == self.current_scope:
             return False
             
@@ -70,8 +70,8 @@ class SymbolTable:
         return True
     
     def lookup(self, name: str) -> Optional[Symbol]:
-        """Lookup a symbol in the symbol table (search from current scope upwards)"""
-        # Look for symbol in current and parent scopes
+        """Pesquisar um símbolo na tabela de símbolos (pesquisar do escopo atual para cima)"""
+        
         for scope_level in reversed(self.scope_stack):
             if name in self.symbols:
                 symbol = self.symbols[name]
@@ -80,7 +80,7 @@ class SymbolTable:
         return None
     
     def update(self, name: str, value: Any) -> bool:
-        """Update the value of an existing symbol"""
+        """Atualizar o valor de um símbolo existente"""
         symbol = self.lookup(name)
         if symbol:
             symbol.value = value
@@ -88,7 +88,7 @@ class SymbolTable:
         return False
     
     def get_all_symbols(self) -> Dict[str, Symbol]:
-        """Get all symbols in the current context"""
+        """Pegar todos os símbolos no contexto atual"""
         return self.symbols.copy()
     
     def __repr__(self):
@@ -97,8 +97,8 @@ class SymbolTable:
 
 class ExecutionContext:
     """
-    Execution context for the Cheese++ runtime.
-    Manages the execution environment, including symbol tables and runtime state.
+    Contexto de execução para o tempo de execução do Cheese++.
+    Gerencia o ambiente de execução, incluindo tabelas de símbolos e estado do tempo de execução.
     """
     
     def __init__(self):
@@ -110,15 +110,15 @@ class ExecutionContext:
         self.current_line: int = 1
         
     def set_source_code(self, source: str) -> None:
-        """Set the source code for debugging purposes"""
+        """Seta o código-fonte atual para o contexto de execução"""
         self.source_code = source
         
     def add_output(self, message: str) -> None:
-        """Add message to output buffer"""
+        """Adicionar mensagem de saída ao buffer de saída"""
         self.output_buffer.append(str(message))
         
     def add_error(self, message: str, line_number: Optional[int] = None) -> None:
-        """Add error message to error buffer"""
+        """Adicionar mensagem de erro ao buffer de erros"""
         if line_number:
             error_msg = f"Line {line_number}: {message}"
         else:
@@ -126,27 +126,25 @@ class ExecutionContext:
         self.error_messages.append(error_msg)
         
     def get_output(self) -> str:
-        """Get all output as a single string"""
+        """Pegar toda a saída acumulada"""
         return '\n'.join(self.output_buffer)
         
     def get_errors(self) -> List[str]:
-        """Get all error messages"""
+        """Pegar todas as mensagens de erro"""
         return self.error_messages.copy()
         
     def has_errors(self) -> bool:
-        """Check if there are any errors"""
+        """Checka se existe algum erro no contexto de execução"""
         return len(self.error_messages) > 0
         
     def clear_output(self) -> None:
-        """Clear the output buffer"""
         self.output_buffer.clear()
         
     def clear_errors(self) -> None:
-        """Clear error messages"""
         self.error_messages.clear()
         
     def reset(self) -> None:
-        """Reset the execution context"""
+        """Reseta o contexto de execução"""
         self.symbol_table = SymbolTable()
         self.output_buffer.clear()
         self.error_messages.clear()
@@ -160,13 +158,13 @@ class ExecutionContext:
 
 class CheeseContext:
     """
-    Main context class for the Cheese++ compiler and runtime.
-    Provides a unified interface for managing compilation and execution context.
+    Classe de contexto principal para o compilador e o tempo de execução do Cheese++.
+    Fornece uma interface unificada para gerenciar o contexto de compilação e execução.
     """
     
     def __init__(self):
         self.execution_context = ExecutionContext()
-        self.compilation_phase = "lexical"  # lexical, syntax, semantic, execution
+        self.compilation_phase = "lexical"  
         self.statistics = {
             "variables_declared": 0,
             "functions_called": 0,
@@ -175,20 +173,19 @@ class CheeseContext:
         }
         
     def set_compilation_phase(self, phase: str) -> None:
-        """Set the current compilation phase"""
+        """Definir a fase de compilação atual"""
         self.compilation_phase = phase
         
     def increment_stat(self, stat_name: str) -> None:
-        """Increment a statistic counter"""
+        """Incrementar um contador de stats"""
         if stat_name in self.statistics:
             self.statistics[stat_name] += 1
             
     def get_statistics(self) -> Dict[str, int]:
-        """Get compilation/execution statistics"""
         return self.statistics.copy()
         
     def declare_variable(self, name: str, value: Any, line_number: Optional[int] = None) -> bool:
-        """Declare a variable in the current context"""
+        """Declaração de variável no contexto"""
         success = self.execution_context.symbol_table.define(
             name, SymbolType.VARIABLE, value, line_number
         )
@@ -197,21 +194,21 @@ class CheeseContext:
         return success
         
     def get_variable(self, name: str) -> Any:
-        """Get variable value from context"""
+        """Pega uma variável do contexto"""
         symbol = self.execution_context.symbol_table.lookup(name)
         return symbol.value if symbol else None
         
     def set_variable(self, name: str, value: Any) -> bool:
-        """Set variable value in context"""
+        """Seta o valor de uma variável existente"""
         return self.execution_context.symbol_table.update(name, value)
         
     def execute_print(self, value: Any) -> None:
-        """Execute a print statement"""
+        """Executa uma operação de impressão"""
         self.execution_context.add_output(str(value))
         self.increment_stat("statements_executed")
         
     def execute_belgian(self) -> None:
-        """Execute the Belgian command (print source code)"""
+        """Executa o comando Belgian"""
         if self.execution_context.source_code:
             self.execution_context.add_output("=== Belgian Mode ===")
             self.execution_context.add_output(self.execution_context.source_code)
@@ -220,19 +217,19 @@ class CheeseContext:
         self.increment_stat("statements_executed")
         
     def get_output(self) -> str:
-        """Get all output from execution"""
+        """Obter toda a saída da execução"""
         return self.execution_context.get_output()
         
     def has_errors(self) -> bool:
-        """Check if there are compilation or runtime errors"""
+        """Verificar se há erros de compilação ou de tempo de execução"""
         return self.execution_context.has_errors()
         
     def get_errors(self) -> List[str]:
-        """Get all error messages"""
+        """Pega todas as mensagens de erro do contexto de execução"""
         return self.execution_context.get_errors()
         
     def reset(self) -> None:
-        """Reset the entire context"""
+        """Reseta o contexto"""
         self.execution_context.reset()
         self.compilation_phase = "lexical"
         self.statistics = {

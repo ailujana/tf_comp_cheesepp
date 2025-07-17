@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class ErrorType(Enum):
-    """Enumeration for different types of errors in Cheese++"""
+    """Enumeração de diferentes tipos de erros no Cheese++"""
     LEXICAL = "lexical"
     SYNTAX = "syntax"
     SEMANTIC = "semantic"
@@ -14,7 +14,7 @@ class ErrorType(Enum):
 
 @dataclass
 class ErrorInfo:
-    """Structured error information"""
+    """Estrutura para armazenar informações de erro"""
     error_type: ErrorType
     message: str
     line_number: Optional[int] = None
@@ -36,7 +36,7 @@ class ErrorInfo:
 
 
 class CheeseError(Exception):
-    """Base exception class for all Cheese++ errors"""
+    """Classe de exceção básica para todos os erros do Cheese++"""
     
     def __init__(self, message: str, error_type: ErrorType = ErrorType.RUNTIME,
                  line_number: Optional[int] = None, column_number: Optional[int] = None,
@@ -53,7 +53,7 @@ class CheeseError(Exception):
 
 
 class CheeseLexicalError(CheeseError):
-    """Lexical analysis errors"""
+    """Erros de análise léxica"""
     
     def __init__(self, message: str, line_number: Optional[int] = None,
                  column_number: Optional[int] = None, context: Optional[str] = None):
@@ -61,7 +61,7 @@ class CheeseLexicalError(CheeseError):
 
 
 class CheeseSyntaxError(CheeseError):
-    """Syntax analysis errors"""
+    """Erros de análise sintática"""
     
     def __init__(self, message: str, line_number: Optional[int] = None,
                  column_number: Optional[int] = None, context: Optional[str] = None,
@@ -70,7 +70,7 @@ class CheeseSyntaxError(CheeseError):
 
 
 class CheeseSemanticError(CheeseError):
-    """Semantic analysis errors"""
+    """Erros semânticos"""
     
     def __init__(self, message: str, line_number: Optional[int] = None,
                  column_number: Optional[int] = None, context: Optional[str] = None,
@@ -79,7 +79,7 @@ class CheeseSemanticError(CheeseError):
 
 
 class CheeseRuntimeError(CheeseError):
-    """Runtime execution errors"""
+    """Erros de tempo de execução"""
     
     def __init__(self, message: str, line_number: Optional[int] = None,
                  column_number: Optional[int] = None, context: Optional[str] = None,
@@ -88,7 +88,7 @@ class CheeseRuntimeError(CheeseError):
 
 
 class CheeseTypeError(CheeseError):
-    """Type checking errors"""
+    """Erros de tipo"""
     
     def __init__(self, message: str, line_number: Optional[int] = None,
                  column_number: Optional[int] = None, context: Optional[str] = None,
@@ -98,111 +98,111 @@ class CheeseTypeError(CheeseError):
 
 class ErrorReporter:
     """
-    Error reporting and management system for the Cheese++ compiler.
-    Collects, formats, and reports errors during compilation and execution.
+    Sistema de gerenciamento e relatório de erros para o compilador Cheese++.
+    Coleta, formata e relata erros durante a compilação e a execução.
     """
     
     def __init__(self):
         self.errors: List[CheeseError] = []
         self.warnings: List[str] = []
-        self.max_errors = 10  # Stop after 10 errors
+        self.max_errors = 10  
         
     def report_error(self, error: CheeseError) -> None:
-        """Report a new error"""
+        """Reporta um erro"""
         self.errors.append(error)
         
     def report_lexical_error(self, message: str, line_number: Optional[int] = None,
                            column_number: Optional[int] = None, context: Optional[str] = None) -> None:
-        """Report a lexical error"""
+        """Reporta um erro léxico"""
         error = CheeseLexicalError(message, line_number, column_number, context)
         self.report_error(error)
         
     def report_syntax_error(self, message: str, line_number: Optional[int] = None,
                           column_number: Optional[int] = None, context: Optional[str] = None,
                           suggestions: Optional[List[str]] = None) -> None:
-        """Report a syntax error"""
+        """Reporta um erro de sintaxe"""
         error = CheeseSyntaxError(message, line_number, column_number, context, suggestions)
         self.report_error(error)
         
     def report_semantic_error(self, message: str, line_number: Optional[int] = None,
                             column_number: Optional[int] = None, context: Optional[str] = None,
                             suggestions: Optional[List[str]] = None) -> None:
-        """Report a semantic error"""
+        """Reporta um erro semântico"""
         error = CheeseSemanticError(message, line_number, column_number, context, suggestions)
         self.report_error(error)
         
     def report_runtime_error(self, message: str, line_number: Optional[int] = None,
                            column_number: Optional[int] = None, context: Optional[str] = None,
                            suggestions: Optional[List[str]] = None) -> None:
-        """Report a runtime error"""
+        """Reporta um erro de tempo de execução"""
         error = CheeseRuntimeError(message, line_number, column_number, context, suggestions)
         self.report_error(error)
         
     def report_type_error(self, message: str, line_number: Optional[int] = None,
                          column_number: Optional[int] = None, context: Optional[str] = None,
                          suggestions: Optional[List[str]] = None) -> None:
-        """Report a type error"""
+        """Reporta um erro de tipo"""
         error = CheeseTypeError(message, line_number, column_number, context, suggestions)
         self.report_error(error)
         
     def report_warning(self, message: str) -> None:
-        """Report a warning"""
+        """Reporta um aviso"""
         self.warnings.append(message)
         
     def has_errors(self) -> bool:
-        """Check if there are any errors"""
+        """Checka se existe algum erro"""
         return len(self.errors) > 0
         
     def has_warnings(self) -> bool:
-        """Check if there are any warnings"""
+        """Checka se existe algum aviso"""
         return len(self.warnings) > 0
         
     def get_error_count(self) -> int:
-        """Get the number of errors"""
+        """Pega o número de erros"""
         return len(self.errors)
         
     def get_warning_count(self) -> int:
-        """Get the number of warnings"""
+        """Pega o número de avisos"""
         return len(self.warnings)
         
     def should_stop_compilation(self) -> bool:
-        """Check if compilation should stop due to too many errors"""
+        """Verificar se a compilação deve ser interrompida devido ao excesso de erros"""
         return len(self.errors) >= self.max_errors
         
     def get_errors_by_type(self, error_type: ErrorType) -> List[CheeseError]:
-        """Get errors of a specific type"""
+        """Pega erros de um tipo específico"""
         return [error for error in self.errors if error.error_info.error_type == error_type]
         
     def get_formatted_errors(self) -> str:
-        """Get all errors formatted as a string"""
+        """Obter todos os erros formatados como uma string"""
         if not self.errors:
-            return "No errors found."
+            return "Não foram encontrados erros"
             
-        result = f"Found {len(self.errors)} error(s):\n"
+        result = f"Encontrados {len(self.errors)} erro(s):\n"
         for i, error in enumerate(self.errors, 1):
             result += f"{i}. {error}\n"
             
         return result
         
     def get_formatted_warnings(self) -> str:
-        """Get all warnings formatted as a string"""
+        """Obter todos os avisos formatados como uma string"""
         if not self.warnings:
-            return "No warnings found."
+            return "Não foram encontrados avisos"
             
-        result = f"Found {len(self.warnings)} warning(s):\n"
+        result = f"Encontrados {len(self.warnings)} alerta(s):\n"
         for i, warning in enumerate(self.warnings, 1):
             result += f"{i}. WARNING: {warning}\n"
             
         return result
         
     def get_summary(self) -> str:
-        """Get a summary of all errors and warnings"""
+        """Obter um resumo de todos os erros e avisos"""
         summary = f"Compilation Summary:\n"
         summary += f"- Errors: {len(self.errors)}\n"
         summary += f"- Warnings: {len(self.warnings)}\n"
         
         if self.errors:
-            summary += f"\nErrors by type:\n"
+            summary += f"\nErros por tipo:\n"
             for error_type in ErrorType:
                 count = len(self.get_errors_by_type(error_type))
                 if count > 0:
@@ -211,7 +211,7 @@ class ErrorReporter:
         return summary
         
     def clear(self) -> None:
-        """Clear all errors and warnings"""
+        """Limpar todos os erros e avisos"""
         self.errors.clear()
         self.warnings.clear()
         
@@ -219,7 +219,7 @@ class ErrorReporter:
         return f"ErrorReporter(errors={len(self.errors)}, warnings={len(self.warnings)})"
 
 
-# Common error messages and suggestions
+
 ERROR_MESSAGES = {
     "undefined_variable": "Variable '{var_name}' is not defined",
     "redefined_variable": "Variable '{var_name}' is already defined",

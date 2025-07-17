@@ -76,9 +76,9 @@ class Runtime:
     def run(self, program, source_code=None):
         self.last_source = source_code
         results = []
-        # program is now a list of statements
+
         for stmt in program:
-            if stmt is not None:  # Skip None statements
+            if stmt is not None: 
                 result = self.eval(stmt)
                 results.append(result)
         return results[-1] if results else None

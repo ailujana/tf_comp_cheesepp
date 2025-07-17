@@ -10,17 +10,17 @@ from .ast import *
 
 def compile_and_run(source_code: str, debug: bool = False) -> str:
     """
-    Compile and run Cheese++ source code.
+    Compilar e executar o código-fonte do Cheese++.
     
     Args:
-        source_code (str): The Cheese++ source code to compile and execute
-        debug (bool): Whether to enable debug mode
+        source_code (str): O código-fonte do Cheese++ a ser compilado e executado
+        debug (bool): Se deve ativar o modo de depuração
         
-    Returns:
-        str: The output of the program execution
+    Retorna:
+        str: A saída da execução do programa
         
-    Raises:
-        CheeseError: If compilation or execution fails
+    Levanta:
+        CheeseError: Se a compilação ou a execução falhar
     """
     try:
         ast = parse(source_code)
@@ -30,11 +30,10 @@ def compile_and_run(source_code: str, debug: bool = False) -> str:
         return runtime.env.get('__output__', '')
         
     except Exception as e:
-        raise CheeseError(f"Compilation failed: {str(e)}")
+        raise CheeseError(f"Falha de interpretação: {str(e)}")
 
 
 
-# Package exports
 __all__ = [
     'parse', 'compile_and_run',
     'Runtime',

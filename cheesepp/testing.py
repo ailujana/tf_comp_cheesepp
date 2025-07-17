@@ -7,8 +7,6 @@ from dataclasses import dataclass
 from enum import Enum
 from io import StringIO
 from contextlib import contextmanager
-
-# Import compiler components
 from .parser import parse
 from .runtime import Runtime
 from .ast import *
@@ -16,7 +14,7 @@ from .errors import CheeseError, ParseError, RuntimeError as CheeseRuntimeError
 
 
 class TestResult(Enum):
-    """Enumeration of test results"""
+    """Enumeração dos resultados dos testes"""
     PASSED = "PASSED"
     FAILED = "FAILED"
     ERROR = "ERROR"
@@ -25,7 +23,7 @@ class TestResult(Enum):
 
 @dataclass
 class TestCase:
-    """Represents a single test case"""
+    """Representa um único caso de teste"""
     name: str
     description: str
     input_code: str
@@ -41,7 +39,7 @@ class TestCase:
 
 @dataclass
 class TestResult:
-    """Represents the result of a test case execution"""
+    """Representa o resultado de um caso de teste"""
     test_case: TestCase
     result: TestResult
     actual_output: str
@@ -63,9 +61,9 @@ class TestResult:
 
 class TestRunner:
     """
-    Main test runner for Cheese++ compiler tests.
+    Executador de testes principal para testes do compilador Cheese++.
     
-    Provides functionality to run individual tests, test suites, and generate reports.
+    Oferece funcionalidade para executar testes individuais, conjuntos de testes e gerar relatórios.
     """
     
     def __init__(self, verbose: bool = False):
@@ -78,27 +76,23 @@ class TestRunner:
         self.skipped_tests = 0
     
     def run_test(self, test_case: TestCase) -> TestResult:
-        """Run a single test case"""
+        """Roda um unico caso de teste"""
         start_time = time.time()
         
         try:
-            # Capture output
             with self._capture_output() as output:
                 if test_case.should_fail:
-                    # Test should fail - expect an exception
                     try:
                         self._execute_code(test_case.input_code)
-                        # If we get here, test failed (should have thrown exception)
                         result = TestResult(
                             test_case=test_case,
                             result=TestResult.FAILED,
                             actual_output=output.getvalue(),
                             actual_error=None,
                             execution_time=time.time() - start_time,
-                            message="Expected failure but code executed successfully"
+                            message="Falha esperada, mas o código foi executado com êxito"
                         )
                     except Exception as e:
-                        # Expected failure occurred
                         if test_case.expected_error and test_case.expected_error in str(e):
                             result = TestResult(
                                 test_case=test_case,
@@ -106,7 +100,7 @@ class TestRunner:
                                 actual_output=output.getvalue(),
                                 actual_error=str(e),
                                 execution_time=time.time() - start_time,
-                                message="Expected failure occurred"
+                                message="Ocorreu uma falha esperada"
                             )
                         else:
                             result = TestResult(
@@ -115,10 +109,9 @@ class TestRunner:
                                 actual_output=output.getvalue(),
                                 actual_error=str(e),
                                 execution_time=time.time() - start_time,
-                                message=f"Wrong error type: {str(e)}"
+                                message=f"Tipo de erro incorreto: {str(e)}"
                             )
                 else:
-                    # Normal test execution
                     try:
                         self._execute_code(test_case.input_code)
                         actual_output = output.getvalue().strip()
@@ -131,7 +124,7 @@ class TestRunner:
                                     actual_output=actual_output,
                                     actual_error=None,
                                     execution_time=time.time() - start_time,
-                                    message="Output matches expected"
+                                    message="A saída corresponde ao esperado"
                                 )
                             else:
                                 result = TestResult(
@@ -140,7 +133,7 @@ class TestRunner:
                                     actual_output=actual_output,
                                     actual_error=None,
                                     execution_time=time.time() - start_time,
-                                    message=f"Expected '{test_case.expected_output}', got '{actual_output}'"
+                                    message=f"Esperava '{test_case.expected_output}', recebeu '{actual_output}'"
                                 )
                         else:
                             result = TestResult(
@@ -149,7 +142,7 @@ class TestRunner:
                                 actual_output=actual_output,
                                 actual_error=None,
                                 execution_time=time.time() - start_time,
-                                message="Executed without error"
+                                message="Executado sem erros"
                             )
                     
                     except Exception as e:
@@ -160,7 +153,7 @@ class TestRunner:
                                 actual_output=output.getvalue(),
                                 actual_error=str(e),
                                 execution_time=time.time() - start_time,
-                                message="Expected error occurred"
+                                message="Ocorreu um erro esperado"
                             )
                         else:
                             result = TestResult(
@@ -169,18 +162,18 @@ class TestRunner:
                                 actual_output=output.getvalue(),
                                 actual_error=str(e),
                                 execution_time=time.time() - start_time,
-                                message=f"Unexpected error: {str(e)}"
+                                message=f"Erro inesperado: {str(e)}"
                             )
         
         except Exception as e:
-            # Unexpected error in test framework itself
+           
             result = TestResult(
                 test_case=test_case,
                 result=TestResult.ERROR,
                 actual_output="",
                 actual_error=str(e),
                 execution_time=time.time() - start_time,
-                message=f"Test framework error: {str(e)}"
+                message=f"Erro na estrutura de teste: {str(e)}"
             )
         
         self.results.append(result)
@@ -192,16 +185,16 @@ class TestRunner:
         return result
     
     def run_tests(self, test_cases: List[TestCase]) -> List[TestResult]:
-        """Run multiple test cases"""
+        """Roda múltiplos casos de teste"""
         self.total_tests = len(test_cases)
         results = []
         
-        print(f"Running {self.total_tests} tests...")
+        print(f"Rodando {self.total_tests} testes...")
         print("-" * 50)
         
         for i, test_case in enumerate(test_cases, 1):
             if self.verbose:
-                print(f"[{i}/{self.total_tests}] Running {test_case.name}...")
+                print(f"[{i}/{self.total_tests}] Rodando {test_case.name}...")
             
             result = self.run_test(test_case)
             results.append(result)
@@ -210,12 +203,10 @@ class TestRunner:
         return results
     
     def _execute_code(self, code: str) -> None:
-        """Execute Cheese++ code"""
+        """Executa um codigo Cheese++"""
         try:
-            # Parse the code
             ast = parse(code)
             
-            # Create runtime and execute
             runtime = Runtime()
             runtime.run(ast, code)
             
@@ -224,7 +215,7 @@ class TestRunner:
     
     @contextmanager
     def _capture_output(self):
-        """Context manager to capture stdout"""
+        """Gerenciador de contexto para capturar stdout"""
         old_stdout = sys.stdout
         sys.stdout = captured_output = StringIO()
         try:
@@ -233,7 +224,7 @@ class TestRunner:
             sys.stdout = old_stdout
     
     def _update_counters(self, result: TestResult):
-        """Update test counters"""
+        """Atualizar os contadores de teste"""
         if result.result == TestResult.PASSED:
             self.passed_tests += 1
         elif result.result == TestResult.FAILED:
@@ -244,7 +235,7 @@ class TestRunner:
             self.skipped_tests += 1
     
     def _print_summary(self):
-        """Print test summary"""
+        """Printa o resumo dos testes"""
         print("-" * 50)
         print(f"Tests run: {self.total_tests}")
         print(f"Passed: {self.passed_tests}")
@@ -253,28 +244,28 @@ class TestRunner:
         print(f"Skipped: {self.skipped_tests}")
         
         if self.failed_tests == 0 and self.error_tests == 0:
-            print("✓ All tests passed!")
+            print("✓ Todos os testes passaram!")
         else:
-            print("✗ Some tests failed!")
-            print("\nFailures and Errors:")
+            print("✗ Alguns testes falharam!")
+            print("\nFalhas e erros:")
             for result in self.results:
                 if result.result in [TestResult.FAILED, TestResult.ERROR]:
                     print(f"  - {result.test_case.name}: {result.message}")
                     if result.actual_error:
-                        print(f"    Error: {result.actual_error}")
+                        print(f"    Erro: {result.actual_error}")
 
 
 class TestBuilder:
     """
-    Utility class for building test cases.
+    Classe utilitária para criar casos de teste.
     
-    Provides factory methods for creating common test patterns.
+    Fornece métodos de fábrica para a criação de padrões de teste comuns.
     """
     
     @staticmethod
     def create_output_test(name: str, code: str, expected_output: str, 
                           description: str = "") -> TestCase:
-        """Create a test that checks output"""
+        """Cria um teste que espera uma saída específica"""
         return TestCase(
             name=name,
             description=description,
@@ -285,7 +276,7 @@ class TestBuilder:
     @staticmethod
     def create_error_test(name: str, code: str, expected_error: str,
                          description: str = "") -> TestCase:
-        """Create a test that expects an error"""
+        """Cria um teste que espera um erro específico"""
         return TestCase(
             name=name,
             description=description,
@@ -296,7 +287,7 @@ class TestBuilder:
     
     @staticmethod
     def create_execution_test(name: str, code: str, description: str = "") -> TestCase:
-        """Create a test that just checks if code executes without error"""
+        """Cria um teste que executa código sem verificar saída ou erros"""
         return TestCase(
             name=name,
             description=description,
@@ -306,14 +297,14 @@ class TestBuilder:
 
 class IntegrationTestSuite:
     """
-    Integration test suite for the Cheese++ compiler.
+    Conjunto de testes de integração para o compilador Cheese++.
     
-    Contains predefined test cases for various language features.
+    Contém casos de teste predefinidos para vários recursos da linguagem.
     """
     
     @staticmethod
     def basic_tests() -> List[TestCase]:
-        """Basic functionality tests"""
+        """Testes de integração básicos"""
         return [
             TestBuilder.create_output_test(
                 "hello_world",
@@ -349,7 +340,7 @@ class IntegrationTestSuite:
     
     @staticmethod
     def control_flow_tests() -> List[TestCase]:
-        """Control flow tests"""
+        """Testes de fluxo de controle"""
         return [
             TestBuilder.create_output_test(
                 "conditional_true",
@@ -380,7 +371,7 @@ class IntegrationTestSuite:
     
     @staticmethod
     def error_tests() -> List[TestCase]:
-        """Error handling tests"""
+        """Testes de erro comuns"""
         return [
             TestBuilder.create_error_test(
                 "undefined_variable",
@@ -403,7 +394,7 @@ class IntegrationTestSuite:
     
     @staticmethod
     def all_tests() -> List[TestCase]:
-        """All predefined tests"""
+        """Todos os testes de integração"""
         return (IntegrationTestSuite.basic_tests() + 
                 IntegrationTestSuite.control_flow_tests() +
                 IntegrationTestSuite.error_tests())
@@ -411,14 +402,14 @@ class IntegrationTestSuite:
 
 class PerformanceTestSuite:
     """
-    Performance test suite for the Cheese++ compiler.
+    Conjunto de testes de desempenho para o compilador Cheese++.
     
-    Tests performance characteristics of the compiler.
+    Testa as características de desempenho do compilador.
     """
     
     @staticmethod
     def create_performance_test(name: str, code: str, max_time: float) -> TestCase:
-        """Create a performance test case"""
+        """Cria um teste de desempenho"""
         test_case = TestCase(
             name=name,
             description=f"Performance test - should complete in under {max_time}s",
@@ -429,7 +420,7 @@ class PerformanceTestSuite:
     
     @staticmethod
     def parsing_performance_tests() -> List[TestCase]:
-        """Tests for parsing performance"""
+        """Testes de desempenho de análise"""
         large_program = """Cheese
         """ + "\n".join([f"Glyn(var{i}) = {i};" for i in range(1000)]) + """
         NoCheese"""
@@ -444,7 +435,7 @@ class PerformanceTestSuite:
 
 
 def run_integration_tests(verbose: bool = False) -> bool:
-    """Run all integration tests"""
+    """Roda os testes de integração"""
     runner = TestRunner(verbose=verbose)
     test_cases = IntegrationTestSuite.all_tests()
     results = runner.run_tests(test_cases)
@@ -453,7 +444,7 @@ def run_integration_tests(verbose: bool = False) -> bool:
 
 
 def run_performance_tests(verbose: bool = False) -> bool:
-    """Run performance tests"""
+    """Roda os testes de desempenho"""
     runner = TestRunner(verbose=verbose)
     test_cases = PerformanceTestSuite.parsing_performance_tests()
     results = runner.run_tests(test_cases)
@@ -462,7 +453,7 @@ def run_performance_tests(verbose: bool = False) -> bool:
 
 
 def run_all_tests(verbose: bool = False) -> bool:
-    """Run all tests"""
+    """Roda todos os testes"""
     print("=" * 60)
     print("CHEESE++ COMPILER TEST SUITE")
     print("=" * 60)
@@ -472,10 +463,10 @@ def run_all_tests(verbose: bool = False) -> bool:
     
     print("=" * 60)
     if integration_passed and performance_passed:
-        print("✓ ALL TESTS PASSED!")
+        print("✓ TODOS OS TESTES PASSARAM!")
         return True
     else:
-        print("✗ SOME TESTS FAILED!")
+        print("✗ ALGUNS TESTES FALHARAM!")
         return False
 
 

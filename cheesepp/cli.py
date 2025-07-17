@@ -13,7 +13,7 @@ from . import __version__, __author__
 
 class CheeseREPL:
     """
-    Read-Eval-Print Loop for interactive Cheese++ programming.
+        Estrutura de repetição Read-Eval-Print para programação interativa Cheese++.
     """
     
     def __init__(self, debug: bool = False):
@@ -22,12 +22,6 @@ class CheeseREPL:
         self.debug = debug
         self.history: List[str] = []
         
-    def welcome_message(self):
-        """Display welcome message"""
-        print(f"Cheese++ Interactive Shell v{__version__}")
-        print(f"Authors: {__author__}")
-        print("Type 'help' for help, 'exit' to quit")
-        print("=" * 50)
         
     def help_message(self):
         """Display help message"""
@@ -68,12 +62,11 @@ class CheeseREPL:
             
     def execute_line(self, line: str) -> bool:
         """
-        Execute a line of Cheese++ code.
-        Returns True to continue, False to exit.
+        Executa uma linha de código do Cheese++.
+        Retorna True para continuar, False para sair
         """
         line = line.strip()
         
-        # Handle special commands
         if line.lower() == 'exit':
             return False
         elif line.lower() == 'help':
@@ -91,37 +84,36 @@ class CheeseREPL:
         elif line.lower() == 'reset':
             self.context.reset()
             self.runtime = Runtime()
-            print("Environment reset")
+            print("Reset de ambiente realizado")
             return True
         elif line.lower().startswith('debug '):
             mode = line.lower().split()[1]
             if mode == 'on':
                 self.debug = True
-                print("Debug mode enabled")
+                print("Modo de debug ativado")
             elif mode == 'off':
                 self.debug = False
-                print("Debug mode disabled")
+                print("Modo de debug desativado")
             else:
-                print("Usage: debug on/off")
+                print("Uso: debug on/off")
             return True
         elif line == '':
             return True
             
-        # Add to history
         self.history.append(line)
         
-        # Try to execute Cheese++ code
+        # Tentativa de execução do código
         try:
-            # Parse and execute
+            # Parse e execução
             ast = parse(line)
             self.context.execution_context.set_source_code(line)
             result = self.runtime.run(ast, line)
             
-            # Show result if available
+            # Mostra o resultado da execução, se possível
             if result is not None:
                 print(result)
                 
-            # Show output if any
+            # Mostra a saída do ambiente, se tiver uma
             output = self.context.get_output()
             if output:
                 print(output)
@@ -158,23 +150,23 @@ class CheeseREPL:
 
 def execute_file(filename: str, debug: bool = False, verbose: bool = False) -> int:
     """
-    Execute a Cheese++ file.
+    Executa um arquivo Cheese++.
     
     Args:
-        filename: Path to the Cheese++ file
-        debug: Enable debug mode
-        verbose: Enable verbose output
+        filename: Caminho para o arquivo Cheese++
+        debug: Habilita o modo de depuração
+        verbose: Habilita a saída detalhada
         
-    Returns:
-        Exit code (0 for success, 1 for error)
+    Retorna:
+        Código de saída (0 para sucesso, 1 para erro)
     """
     try:
-        # Check if file exists
+        # Verifica se o arquivo existe
         if not Path(filename).exists():
             print(f"Error: File '{filename}' not found")
             return 1
             
-        # Read file
+        # Le o arquivo
         with open(filename, 'r', encoding='utf-8') as f:
             source_code = f.read()
             
@@ -182,18 +174,18 @@ def execute_file(filename: str, debug: bool = False, verbose: bool = False) -> i
             print(f"Executing file: {filename}")
             print(f"Source code length: {len(source_code)} characters")
             
-        # Create runtime environment
+        # Cria um ambiente de execução e contexto
         context = CheeseContext()
         runtime = Runtime()
         error_reporter = ErrorReporter()
         
-        # Parse and execute
+        # Parse e executa
         try:
             ast = parse(source_code)
             context.execution_context.set_source_code(source_code)
             result = runtime.run(ast, source_code)
             
-            # Show output
+            # Mostra a saida do resultado, se houver
             output = context.get_output()
             if output:
                 print(output)
@@ -221,16 +213,15 @@ def execute_file(filename: str, debug: bool = False, verbose: bool = False) -> i
 
 
 def main():
-    """Main entry point for the CLI"""
     parser = argparse.ArgumentParser(
         description=f"Cheese++ Compiler v{__version__}",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  cheesepp                    # Start interactive shell
-  cheesepp program.cheesepp   # Execute file
-  cheesepp -d program.cheesepp # Execute with debug mode
-  cheesepp -v program.cheesepp # Execute with verbose output
+  cheesepp                    # Inicia um terminal interativo
+  cheesepp program.cheesepp   # Executa um arquivo Cheese++
+  cheesepp -d program.cheesepp # Executa com o modo de depuração
+  cheesepp -v program.cheesepp # Executa com saída detalhada
         """
     )
     
@@ -260,12 +251,10 @@ Examples:
     
     args = parser.parse_args()
     
-    # Execute file or start REPL
     if args.file:
         exit_code = execute_file(args.file, args.debug, args.verbose)
         sys.exit(exit_code)
     else:
-        # Start REPL
         repl = CheeseREPL(debug=args.debug)
         repl.run()
 

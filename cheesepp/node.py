@@ -5,7 +5,7 @@ from enum import Enum
 
 
 class NodeType(Enum):
-    """Enumeration of all node types in the Cheese++ AST"""
+    """Enumeração de todos os tipos de nós no AST do Cheese++"""
     PROGRAM = "program"
     STATEMENT = "statement"
     EXPRESSION = "expression"
@@ -22,7 +22,7 @@ class NodeType(Enum):
 
 @dataclass
 class Position:
-    """Represents a position in the source code"""
+    """Representa uma posição no código-fonte"""
     line: int
     column: int
     
@@ -32,10 +32,10 @@ class Position:
 
 class ASTNode(ABC):
     """
-    Abstract base class for all AST nodes.
+    Classe base abstrata para todos os nós AST.
     
-    All nodes in the Cheese++ AST inherit from this class and must implement
-    the accept method for the visitor pattern.
+    Todos os nós do AST do Cheese++ herdam essa classe e devem implementar
+    o método accept para o padrão de visitante.
     """
     
     def __init__(self, node_type: NodeType, position: Optional[Position] = None):
@@ -46,23 +46,23 @@ class ASTNode(ABC):
     
     @abstractmethod
     def accept(self, visitor):
-        """Accept a visitor for the visitor pattern"""
+        """Aceita um visitante para o padrão de visitante"""
         pass
     
     def add_child(self, child: 'ASTNode') -> None:
-        """Add a child node"""
+        """Adiciona um nó filho ao nó atual."""
         if child:
             child.parent = self
             self.children.append(child)
     
     def remove_child(self, child: 'ASTNode') -> None:
-        """Remove a child node"""
+        """Remove um nó filho do nó atual."""
         if child in self.children:
             child.parent = None
             self.children.remove(child)
     
     def get_children(self) -> List['ASTNode']:
-        """Get all child nodes"""
+        """Pega uma cópia da lista de nós filhos."""
         return self.children.copy()
     
     def __repr__(self):
@@ -70,7 +70,7 @@ class ASTNode(ABC):
 
 
 class ProgramNode(ASTNode):
-    """Root node of the AST representing the entire program"""
+    """Nó raiz do AST que representa todo o programa"""
     
     def __init__(self, statements: List[ASTNode], position: Optional[Position] = None):
         super().__init__(NodeType.PROGRAM, position)
@@ -83,21 +83,21 @@ class ProgramNode(ASTNode):
 
 
 class StatementNode(ASTNode):
-    """Base class for all statement nodes"""
+    """Classe base para todos os nós de declaração"""
     
     def __init__(self, position: Optional[Position] = None):
         super().__init__(NodeType.STATEMENT, position)
 
 
 class ExpressionNode(ASTNode):
-    """Base class for all expression nodes"""
+    """Classe base para todos os nós de expressão"""
     
     def __init__(self, position: Optional[Position] = None):
         super().__init__(NodeType.EXPRESSION, position)
 
 
 class BlockNode(StatementNode):
-    """Node representing a block of statements"""
+    """Nó que representa um bloco de instruções"""
     
     def __init__(self, statements: List[StatementNode], position: Optional[Position] = None):
         super().__init__(position)
@@ -111,7 +111,7 @@ class BlockNode(StatementNode):
 
 
 class AssignmentNode(StatementNode):
-    """Node representing variable assignment"""
+    """Nó que representa uma atribuição de variável"""
     
     def __init__(self, variable: str, value: ExpressionNode, 
                  assignment_type: str = "=", position: Optional[Position] = None):
@@ -127,7 +127,7 @@ class AssignmentNode(StatementNode):
 
 
 class BinaryOpNode(ExpressionNode):
-    """Node representing binary operations"""
+    """Nó que representa operações binárias"""
     
     def __init__(self, left: ExpressionNode, operator: str, right: ExpressionNode,
                  position: Optional[Position] = None):
@@ -144,7 +144,7 @@ class BinaryOpNode(ExpressionNode):
 
 
 class UnaryOpNode(ExpressionNode):
-    """Node representing unary operations"""
+    """Nó que representa operações unárias"""
     
     def __init__(self, operator: str, operand: ExpressionNode,
                  position: Optional[Position] = None):
@@ -159,7 +159,7 @@ class UnaryOpNode(ExpressionNode):
 
 
 class VariableNode(ExpressionNode):
-    """Node representing variable references"""
+    """Nó que representa variáveis"""
     
     def __init__(self, name: str, position: Optional[Position] = None):
         super().__init__(position)
@@ -171,20 +171,20 @@ class VariableNode(ExpressionNode):
 
 
 class LiteralNode(ExpressionNode):
-    """Node representing literal values"""
+    """Nó que representa literais (números, strings, etc.)"""
     
     def __init__(self, value: Any, literal_type: str, position: Optional[Position] = None):
         super().__init__(position)
         self.node_type = NodeType.LITERAL
         self.value = value
-        self.literal_type = literal_type  # "number", "string", "boolean"
+        self.literal_type = literal_type  
     
     def accept(self, visitor):
         return visitor.visit_literal(self)
 
 
 class FunctionCallNode(ExpressionNode):
-    """Node representing function calls"""
+    """Nó que representa chamadas de função"""
     
     def __init__(self, name: str, arguments: List[ExpressionNode],
                  position: Optional[Position] = None):
@@ -200,7 +200,7 @@ class FunctionCallNode(ExpressionNode):
 
 
 class ConditionalNode(StatementNode):
-    """Node representing conditional statements (if/else)"""
+    """Nó que representa instruções condicionais"""
     
     def __init__(self, condition: ExpressionNode, then_branch: StatementNode,
                  else_branch: Optional[StatementNode] = None,
@@ -221,7 +221,7 @@ class ConditionalNode(StatementNode):
 
 
 class LoopNode(StatementNode):
-    """Node representing loop statements"""
+    """Nó que representa laços de repetição"""
     
     def __init__(self, body: StatementNode, condition: ExpressionNode,
                  loop_type: str = "while", position: Optional[Position] = None):
@@ -229,7 +229,7 @@ class LoopNode(StatementNode):
         self.node_type = NodeType.LOOP
         self.body = body
         self.condition = condition
-        self.loop_type = loop_type  # "while", "repeat_until", etc.
+        self.loop_type = loop_type 
         
         self.add_child(body)
         self.add_child(condition)
@@ -239,7 +239,7 @@ class LoopNode(StatementNode):
 
 
 class PrintNode(StatementNode):
-    """Node representing print statements (Wensleydale)"""
+    """Nó que representa instruções de impressão"""
     
     def __init__(self, expression: ExpressionNode, position: Optional[Position] = None):
         super().__init__(position)
@@ -251,7 +251,7 @@ class PrintNode(StatementNode):
 
 
 class DebugNode(StatementNode):
-    """Node representing debug statements (Belgian)"""
+    """Nó que representa instruções de depuração"""
     
     def __init__(self, position: Optional[Position] = None):
         super().__init__(position)
@@ -262,9 +262,9 @@ class DebugNode(StatementNode):
 
 class NodeVisitor(ABC):
     """
-    Abstract base class for AST node visitors.
+    Classe base abstrata para visitantes de nós AST.
     
-    Implements the visitor pattern for traversing and processing AST nodes.
+    Implementa o padrão de visitante para percorrer e processar nós AST.
     """
     
     @abstractmethod
@@ -318,21 +318,21 @@ class NodeVisitor(ABC):
 
 class ASTTraverser:
     """
-    Utility class for traversing AST nodes.
+    Classe utilitária para percorrer nós AST.
     
-    Provides methods for different traversal strategies.
+    Fornece métodos para diferentes estratégias de passagem.
     """
     
     @staticmethod
     def depth_first_search(node: ASTNode, visitor: NodeVisitor):
-        """Perform depth-first traversal of AST"""
+        """Performa uma busca em profundidade no AST"""
         node.accept(visitor)
         for child in node.children:
             ASTTraverser.depth_first_search(child, visitor)
     
     @staticmethod
     def breadth_first_search(node: ASTNode, visitor: NodeVisitor):
-        """Perform breadth-first traversal of AST"""
+        """Performa uma busca em largura no AST"""
         queue = [node]
         while queue:
             current = queue.pop(0)
@@ -341,7 +341,7 @@ class ASTTraverser:
     
     @staticmethod
     def find_nodes_by_type(node: ASTNode, node_type: NodeType) -> List[ASTNode]:
-        """Find all nodes of a specific type"""
+        """Encontra todos os nós de um tipo específico no AST"""
         result = []
         
         def collector(n):
@@ -353,7 +353,7 @@ class ASTTraverser:
     
     @staticmethod
     def _traverse_with_function(node: ASTNode, func):
-        """Helper method for traversal with custom function"""
+        """Ajuda a percorrer o AST com uma função personalizada"""
         func(node)
         for child in node.children:
             ASTTraverser._traverse_with_function(child, func)
@@ -361,58 +361,58 @@ class ASTTraverser:
 
 class ASTBuilder:
     """
-    Utility class for building AST nodes.
+    Classe utilitária para criar nós AST.
     
-    Provides factory methods for creating common node patterns.
+    Fornece métodos de fábrica para criar padrões de nós comuns.
     """
     
     @staticmethod
     def create_program(statements: List[StatementNode]) -> ProgramNode:
-        """Create a program node with statements"""
+        """Cria um nó de programa com suas declarações"""
         return ProgramNode(statements)
     
     @staticmethod
     def create_assignment(variable: str, value: ExpressionNode, 
                          assignment_type: str = "=") -> AssignmentNode:
-        """Create an assignment node"""
+        """Cria um nó de atribuição"""
         return AssignmentNode(variable, value, assignment_type)
     
     @staticmethod
     def create_binary_op(left: ExpressionNode, operator: str, 
                         right: ExpressionNode) -> BinaryOpNode:
-        """Create a binary operation node"""
+        """Cria um nó de operação binária"""
         return BinaryOpNode(left, operator, right)
     
     @staticmethod
     def create_literal(value: Any, literal_type: str) -> LiteralNode:
-        """Create a literal node"""
+        """Cria um nó de literal"""
         return LiteralNode(value, literal_type)
     
     @staticmethod
     def create_variable(name: str) -> VariableNode:
-        """Create a variable node"""
+        """Cria um nó de variável"""
         return VariableNode(name)
     
     @staticmethod
     def create_function_call(name: str, arguments: List[ExpressionNode]) -> FunctionCallNode:
-        """Create a function call node"""
+        """Cria um nó de chamada de função"""
         return FunctionCallNode(name, arguments)
     
     @staticmethod
     def create_conditional(condition: ExpressionNode, then_branch: StatementNode,
                           else_branch: Optional[StatementNode] = None) -> ConditionalNode:
-        """Create a conditional node"""
+        """Cria um nó de condicional"""
         return ConditionalNode(condition, then_branch, else_branch)
     
     @staticmethod
     def create_loop(body: StatementNode, condition: ExpressionNode,
                    loop_type: str = "while") -> LoopNode:
-        """Create a loop node"""
+        """Cria um nó de laço de repetição"""
         return LoopNode(body, condition, loop_type)
 
 
 def ast_to_dict(node: ASTNode) -> Dict[str, Any]:
-    """Convert AST node to dictionary representation"""
+    """Converte o nó AST em uma representação de dicionário"""
     result = {
         'type': node.node_type.value,
         'class': node.__class__.__name__,
@@ -420,7 +420,7 @@ def ast_to_dict(node: ASTNode) -> Dict[str, Any]:
         'children': []
     }
     
-    # Add node-specific attributes
+    
     if hasattr(node, 'value'):
         result['value'] = node.value
     if hasattr(node, 'name'):
@@ -430,7 +430,7 @@ def ast_to_dict(node: ASTNode) -> Dict[str, Any]:
     if hasattr(node, 'variable'):
         result['variable'] = node.variable
     
-    # Add children
+
     for child in node.children:
         result['children'].append(ast_to_dict(child))
     
@@ -438,17 +438,16 @@ def ast_to_dict(node: ASTNode) -> Dict[str, Any]:
 
 
 def dict_to_ast(data: Dict[str, Any]) -> ASTNode:
-    """Convert dictionary representation back to AST node"""
-    # This is a simplified version - in practice, you'd need more sophisticated reconstruction
+    """Converte a representação do dicionário de volta para o nó AST"""
+   
     node_type = NodeType(data['type'])
     
-    # Create appropriate node based on type
     if node_type == NodeType.PROGRAM:
         return ProgramNode([])
     elif node_type == NodeType.LITERAL:
         return LiteralNode(data.get('value'), data.get('literal_type', 'unknown'))
     elif node_type == NodeType.VARIABLE:
         return VariableNode(data.get('name', ''))
-    # Add more node types as needed
+   
     
     return None
